@@ -1,0 +1,36 @@
+state,clinic_type,beds,staff,deaths,stroke_unit,stroke_pat, stroke_deaths,resp_avail,covid_pat
+MT,Short Term,21,30,14,Yes,12,4,No,8
+KY,Long Term,37,77,16,Yes,6,1,Yes,6
+VA,Psychiatric,57,101,23,Yes,16,5,No,0
+IA,Psychiatric,72,458,33,No,9,4,Yes,4
+KS,Psychiatric,72,810,55,Yes,2,14,Yes,7
+KY,Psychiatric,80,168,33,No,14,11,Yes,4
+MD,Psychiatric,80,183,49,Yes,4,27,Yes,2
+AL,Rehabilitation,100,265,67,Yes,12,19,Yes,3
+NC,Short Term,117,234,61,Yes,14,41,Yes,5
+DE,Rehabilitation,119,255,179,Yes,12,98,No,4
+VA,Short Term,129,444,17,Yes,8,6,Yes,11
+IA,Psychiatric,130,657,151,Yes,6,81,Yes,3
+VT,Psychiatric,149,321,214,Yes,12,101,Yes,4
+PA,Short Term,175,341,54,Yes,2,34,Yes,0
+KY,Psychiatric,192,231,312,Yes,13,60,Yes,6
+NV,Short Term,198,259,557,Yes,14,287,Yes,3
+WV,Psychiatric,200,862,74,Yes,4,23,No,5
+RI,Short Term,220,301,67,Yes,0,31,Yes,9
+MA,Short Term,283,563,380,Yes,10,42,Yes,2
+KY,Psychiatric,323,531,118,Yes,2,30,Yes,3
+WI,Short Term,345,531,256,Yes,8,162,Yes,3
+CA,Critical Access Hospitals,374,695,362,Yes,6,222,Yes,4
+AK,Short Term,401,455,144,Yes,2,85,Yes,9
+CA,Short Term,409,521,73,No,12,7,Yes,4
+TX,Critical Access Hospitals,413,854,447,Yes,20,254,Yes,5
+NY,Short Term,482,1002,182,Yes,13,81,Yes,4
+TX,Short Term,500,818,275,Yes,11,165,Yes,4
+NV,Short Term,541,1254,191,Yes,18,86,Yes,8
+TX,Short Term,565,1911,271,Yes,8,125,Yes,4
+NV,Short Term,601,1296,541,Yes,18,412,Yes,9
+VT,Short Term,615,859,666,No,12,210,Yes,8
+MS,Short Term,650,964,327,Yes,20,132,Yes,15
+GA,Short Term,691,1542,126,Yes,16,87,Yes,6
+NC,Critical Access Hospitals,769,2630,758,Yes,9,415,Yes,11
+MI,Short Term,991,2415,427,Yes,18,255,Yes,7

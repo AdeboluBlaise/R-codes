@@ -1,0 +1,212 @@
+#Changing the working directory and importing the dataset
+setwd("C:/Users/Temitope/Desktop/portfolio/R, CHARLES")
+data <- read.csv("hospitals.csv")
+
+#Loading appropriate libraries to be used
+library(dplyr)
+library(ggplot2)
+library("car")
+library(tidyr)
+
+head(data)#To view the first 10 rows
+ncol(data)#Number of columns in dataset
+nrow(data)#Number of rows in dataset
+
+str(data)#To view the datatypes for each variable
+
+#Making R to recognize variables as categorical variables 
+data$clinic_type<- as.factor(data$clinic_type)
+data$stroke_unit <- as.factor(data$stroke_unit)
+data$resp_avail<- as.factor (data$resp_avail)
+
+
+#Changing some variables to their appropriate variable names
+colnames(data)[7] <- "stroke_patients"
+colnames(data)[9] <- "response_available"
+colnames(data)[10] <- "covid_patients"
+
+
+attach(data)
+
+
+
+#PART1 - DESCRIPTIVE ANALYSIS
+
+#Plotting the histograms to get the distribution of each variable as this will be usable in the assignment
+hist(beds, col="green")
+hist(staff,col="green")
+hist(deaths,col="green")
+hist(stroke_patients,col="green")
+hist(stroke_deaths,col="green")
+
+
+#MEASURES OF CENRTAL TENDENCY
+
+#Mean of stroke patients variable
+mean(stroke_patients)
+
+#Median value foe beds, staff, deaths, stroke_deaths and covid patients variables
+medians <- apply(data[c("beds", "staff","deaths","stroke_deaths","covid_patients")],2,FUN=median)
+medians
+
+#Using the dplyr library to find mode
+
+#Clinic type mode with percentage column added
+mode_clinic_type<-data %>%
+  count(clinic_type) %>% 
+  arrange(desc(n)) %>%
+  mutate(freq_percent = n / sum(n))
+mode_clinic_type
+
+  #Stroke unit mode with percentage column added
+mode_stroke_unit<-data %>%
+  count(stroke_unit) %>% 
+  arrange(desc(n)) %>%
+  mutate(freq_percent = n / sum(n))
+mode_stroke_unit
+
+#Mode for response_available variable with percentage column added
+mode_response_available<-data %>%
+  count(response_available) %>% 
+  arrange(desc(n)) %>%
+  mutate(freq_percent = n / sum(n))
+mode_response_available
+
+
+#MEASURES OF SPREAD
+
+sd(covid_patients) #Standard deviation for the covid patients variable
+
+
+max(beds)- min(beds) #Range for beds variable
+max(staff)-min(staff) #Range for staff variable
+max(deaths)-min(deaths) #Range for deaths
+max(stroke_deaths) - min(stroke_deaths) #Range for stroke deaths
+max(covid_patients) - min(covid_patients) #Range for covid patients
+
+
+#GRAPHS
+
+#Bar graph to visualize frequency of clinic types in the dataset
+ggplot(data, aes(x=reorder(clinic_type, clinic_type, function(x) - length(x)))) +
+  geom_bar( width=0.5, fill="blue")+
+  labs(x='Clinic_type',y="Frequency")+theme(axis.text.x = element_text(angle = 90))+
+  geom_text(stat='count', aes(label=..count..),size = 3, vjust=-1)+
+  ggtitle("Types of clinics")+
+  theme(
+    plot.title = element_text(hjust = 0.5,size=12, face="bold.italic"),
+    axis.title.x = element_text(size=9, face="bold"),
+    axis.title.y = element_text( size=9, face="bold")
+  )+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+  
+
+
+
+#Pie chart to show stroke unit presence in the dataset
+mycols <- c("#0073C2FF", "#EFC000FF") #Defining the colour to be used
+            
+            
+ggplot(mode_stroke_unit, aes(x = "", y = freq_percent, fill = stroke_unit)) +
+  geom_bar(width = 1, stat = "identity", color = "white")+
+  coord_polar("y", start = 0)+
+  
+  geom_text(aes(y = (cumsum(freq_percent) - 0.9*freq_percent),label = n),
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = mycols) +
+  theme_void()+
+  ggtitle("Stroke unit")+
+  theme(
+    plot.title = element_text(hjust = 0.5,size=12, face="bold.italic"))
+
+
+
+#Constructing a box-plot for the categories of clinic types against death score
+ggplot(data, aes(x = clinic_type, y = deaths, fill = clinic_type)) +
+  geom_boxplot() +
+  theme_classic()+
+  theme(legend.position = "top")
+
+get_box_stats <- function(y, upper_limit = max(deaths) * 1.15) {
+  return(data.frame(
+    y = 0.95 * upper_limit,
+    label = paste(
+      "Count =", length(y), "\n",
+      "25% quartile =", quantile(y, probs = 0.25),"\n",
+      "50% quartile =", quantile(y, probs = 0.50),"\n",
+      "75% quartile =", quantile(y, probs = 0.75),"\n"
+    )
+  ))
+}
+
+ggplot(data, aes(x = clinic_type, y = deaths, fill = clinic_type)) +
+  geom_boxplot() +
+  theme_classic()+
+  theme(legend.position = "top", legend.text = element_text(size = 7))+
+  ggtitle("Boxplot for all clinic types accoring to deaths rates")+
+stat_summary(fun.data = get_box_stats, geom = "text",size=3, hjust = 0.5, vjust = 0.9)
+
+
+
+
+
+#Correlation
+#To test for normality of different varibles to be used
+shapiro.test(staff)
+shapiro.test(beds)
+shapiro.test(deaths)
+shapiro.test(stroke_patients)
+shapiro.test(stroke_deaths)
+
+
+#Correlation between beds and staff
+cor.test(beds,staff,method= "spearman")
+#To confirm the results of these correlation tests using the scatterplot diagram
+scatterplot(beds ~ staff, data = data,
+            smooth = FALSE,grid = FALSE, frame = FALSE,main="correlation between beds and staff")
+
+
+#Correlation between staff and deaths
+cor.test(staff,deaths,method = "spearman")
+#To confirm the results of these correlation tests using the scatterplot diagram
+scatterplot(staff~deaths,
+            smooth = FALSE, grid = FALSE, frame = FALSE, main = "correlation between staff and deaths")
+
+#Correlation between stroke patients and stroke deaths
+cor.test(stroke_patients, stroke_deaths, method="spearman")
+#To confirm the results of these correlation tests using the scatterplot diagram
+scatterplot(stroke_patients, stroke_deaths,
+            smooth = FALSE, grid = FALSE, frame = FALSE, main = "correlation between stroke patients and stroke deaths")
+
+
+
+
+
+
+#PART2 - INFERENTIAL ASSUMPTIONS
+
+#Calculating confidence intervals for Stroke patients variable
+
+#When finding the confidence interval using the "confint" function of r,the model is fitted first into a dataframe
+model <- lm(stroke_patients ~ 1, data)
+
+
+confint(model, level=0.99) # The confidence interval for 99% 
+confint(model, level=0.95) # The confidence interval for 95% 
+confint(model, level=0.90) # The confidence interval for 90%
+
+
+
+#Hypothesis testing
+
+
+#To test if there is a significant difference in death rate between the two groups of response-available variable for the population.
+wilcox.test(deaths~response_available, data=data, exact=FALSE)
+
+#To test if there is a significant difference in stroke death rate between the two groups of stroke unit variable for the population.
+wilcox.test(stroke_deaths~stroke_unit, data=data, exact = FALSE)
+
+#To test if there is a significant difference in stroke death rate between the two groups of stroke unit variable for the population.
+t.test(stroke_patients~stroke_deaths)
+t.test(stroke_deaths, deaths)
