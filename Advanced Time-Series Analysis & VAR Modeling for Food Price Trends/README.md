@@ -1,1 +1,2 @@
-
+In this project, I cleaned and explored a comprehensive food price dataset, tackling missing values, outliers, and ensuring stationarity through differencing and the ADF test. 
+I then employed Vector Autoregression (VAR) to unveil causal links among commodities, generating insights into market trends. This robust workflow showcases my expertise in R-based data wrangling, statistical analysis, and time-series forecasting.
